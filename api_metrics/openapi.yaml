@@ -1,0 +1,190 @@
+openapi: "3.0.3"
+servers:
+  description: Localhost
+  url: http://127.0.0.1:8003
+info:
+  description: API for extract time series
+  version: "1.0.0"
+  title: Extract Phenologic metrics
+  contact:
+    email: "gabriel.koyama44@gmail.com"
+paths:
+  /single-phenology:
+    get:
+      summary: 'Extract 15 phenologic metrics from VI data for a single season'
+      description: |
+        Single Phenology is a function from CropPhenology package in R, 
+        which takes a time series vegetation index data for a single pixel for a single season.
+      parameters:
+        - in: query
+          name: roi
+          description: Region of interest
+          required: true
+          schema:
+            type: string
+            example: '{"type": "FeatureCollection", "features": [{"type": "Feature", "properties": {}, "geometry": {"type": "Polygon", "coordinates": [[[-42.0968627929688, -19.6478313116844], [-42.3028564453125, -19.6477609556974], [-42.3028564453125, -19.8984718033807], [-42.3014831542969, -19.8984710238534], [-42.0968627929688, -19.8984710238534], [-42.0968627929688, -19.6478313116844]]]}}]}'
+        - in: query
+          name: period
+          description: Time series year period.
+          required: true
+          schema:
+            type: string
+            example: "2019-01-01/2020-01-01"
+        - in: query
+          name: token
+          description: Access token provided by BDC
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: datacube
+          description: Datacube name provided by BDC
+          required: false
+          schema:
+            type: string
+            example: "S2-SEN2COR_10_16D_STK-1"
+      responses:
+          '200':
+            description: search results matching criteria
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/InventoryItem'
+          '400':
+            description: Bad Request Error
+  /coverages:
+    get:
+      summary: 'Coverages of BDC'
+      description: |
+        List all coverages availables
+      responses:
+          '200':
+            description: List of datacubes
+          '400':
+            description: Bad Request Error
+components:
+  schemas:
+    # PhenologicResponse:
+    #   type: object
+    #   properties:
+    #     area:
+    #       type: object
+    #       format: JSON
+    #       example: {"type": "FeatureCollection", "features": [{"type": "Feature", "properties": {}, "geometry": {"type": "Polygon", "coordinates": [[[-42.0968627929688, -19.6478313116844], [-42.3028564453125, -19.6477609556974], [-42.3028564453125, -19.8984718033807], [-42.3014831542969, -19.8984710238534], [-42.0968627929688, -19.8984710238534], [-42.0968627929688, -19.6478313116844]]]}}]}
+    #     datacube:
+    #       type: string
+    #       example: S2-SEN2COR_10_16D_STK-1
+    #     period:
+    #       $ref: '#/components/schemas/Period'
+    #     source:
+    #       type: string
+    #       example: https://brazildatacube.dpi.inpe.br/
+    #     service:
+    #       type: string
+    #       example: wtss 0.7.0.post3
+    #     index:
+
+    # Period:
+    #   properties:
+    #     start:
+    #       type: string
+    #       example: "2019-01-01"
+    #     end: 
+    #       type: string
+    #       example: "2020-01-01"
+    # Index:
+    #   properties:
+
+
+    InventoryItem:
+      type: object
+      required:
+        - id
+        - name
+        - manufacturer
+        - releaseDate
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        name:
+          type: string
+          example: Widget Adapter
+        releaseDate:
+          type: string
+          format: date-time
+          example: '2016-08-29T09:12:33.001Z'
+        manufacturer:
+          $ref: '#/components/schemas/Manufacturer'
+    Manufacturer:
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          example: ACME Corporation
+        homePage:
+          type: string
+          format: url
+          example: 'https://www.acme-corp.com'
+        phone:
+          type: string
+          example: 408-867-5309
+      type: object
+
+
+
+
+# {
+#     "area": {"type": "Polygon", "coordinates": [[[-42.0968627929688, -19.6478313116844], [-42.3028564453125, -19.6477609556974], [-42.3028564453125, -19.8984718033807], [-42.3014831542969, -19.8984710238534], [-42.0968627929688, -19.8984710238534], [-42.0968627929688, -19.6478313116844]]]},
+#     "datacube": "S2-recent_10_16D_STK-1",
+#     "period": {
+#         "start": "2019-01-01",
+#         "end": "2020-01-01"
+#     },
+#     "source": "https://brazildatacube.dpi.inpe.br/",
+#     "service": "wtss 0.7.0.post3",
+#     "index": {
+#         "ndvi": {
+#             "raw": {
+#                 "value": [
+#                   1
+#                 ],
+#                 "date": [
+#                     "2019-09-02",
+#                 ]
+#             },
+#             "processed": {
+#                 "value": [
+#                     1
+#                 ],
+#                 "date": [
+#                     "2019-09-03"
+#                 ]
+#             }
+#         }
+#     },
+#     "metrics": {
+#         "phenologic": {
+#             "stages": [ 
+#                 { 
+#                     "SOS": "2020-01-01",    // minimun dates, start of season
+#                     "PEAK": "2020-01-01",   // maximum value, date
+#                     "EOS": "2020-01-01",    // end of season 
+#                     "LOS": "2020-01-01"     // length of season
+#                 }
+#             ]
+#         },
+#         "mean_square_error": 0.053,
+#         "statistics": {
+#             "Minimum": 0.197,
+#             "Maximum": 0.842,
+#             "average": 0.523,
+#             "median": 0.52,
+#             "deviation": 0.17
+#         }
+#     }
+# }
