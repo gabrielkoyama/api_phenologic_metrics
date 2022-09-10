@@ -25,44 +25,58 @@ single_phenology <- function(annualTS, percentage, smoothing) {
 
 pheno_metrics <- function(IVStack, roi) {
   raster_metrics <- PhenoMetrics(IVStack, roi)
-
   print("saving PhenoMetrics results at ./PhenoMetrics_results")
 
   writeRaster(raster_metrics, "/PhenoMetrics_results") # save in grd
-
   print("saving single metrics..")
-  idx<-1
 
-  enpoints <- list()
+  # saving tiffs
+  idx<-1
+  endpoints <- list()
   for (name in names(raster_metrics)){
       dst_name <- paste0("PhenoMetrics_results_", name, ".tif")
-      enpoints <- append(enpoints, paste0(URL, "PhenoMetrics_results_", name, ".tif"))
+      endpoints <- append(endpoints, paste0(URL, dst_name))
       aux_tif  <- subset(raster_metrics,subset=idx)
       idx<-idx+1
       writeRaster(aux_tif, dst_name)
       print(paste0("saved file: ", dst_name))
   }
+  print(endpoints)
 
-  # list single metrics
-  # single_files_metrics <- list.files("./", pattern = glob2rx("*PhenoMetrics_results_*.tif$"), full.names = TRUE)
+  # saving thumbnail
+  idx <- 1
+  thumbnails <- list()
+  for (name in names(raster_metrics)){
+      aux_tif <- subset(raster_metrics,subset=idx)
+      dst_name_thumb = paste0(name, "_thumbnail.png")
 
-  return(enpoints)
+      thumbnails <- append(thumbnails, paste0(URL, dst_name_thumb))
+      print(paste0("saving png thumbnail: ", dst_name_thumb))
+      
+      png(filename=dst_name_thumb)
+      par(bg=NA)
+      plot(aux_tif, axes=FALSE, legend=FALSE, box=FALSE)
+      dev.off()
+      idx<-idx+1
+  }
+  print(thumbnails)
+
+  return(endpoints)
 }
 
-# Coverages 
-#* @get /coverages-wtss
-function(){
-  wtss_inpe <- "https://brazildatacube.dpi.inpe.br/wtss"
-  coverages <- Rwtss::list_coverages(wtss_inpe)
-  list(coverages = coverages)
+
+#* @get /get-image-png
+#* @serializer contentType list(type='image/png')
+function(f){
+  print(paste0("Downloading ", f))
+  readBin(paste0("./", f),'raw',n = file.info(f)$size)
 }
 
-# Coverages 
-#* @get /coverages-stac
-function(){
-  wtss_inpe <- "https://brazildatacube.dpi.inpe.br/wtss"
-  coverages <- Rwtss::list_coverages(wtss_inpe)
-  list(coverages = coverages)
+#* @get /get-image-tiff
+#* @serializer contentType list(type='image/tiff')
+function(f){
+  print(paste0("Downloading ", f))
+  readBin(paste0("./", f),'raw',n = file.info(f)$size)
 }
 
 # single-phenology
@@ -123,30 +137,6 @@ function(roi, period="", token="", datacube=""){
         deviation = jsonlite::unbox(sd(annualTS))
     )
   ))
-}
-
-
-#* @get /test2
-#* @serializer contentType list(type='image/png')
-function(){
-    # p = data.frame(x=1,y= 1) %>% ggplot(aes(x=x,y=y)) + geom_point()
-    file = './file.png'
-    # ggsave(file,p)
-    readBin(file,'raw',n = file.info(file)$size)
-}
-
-#* @get /get-image
-#* @serializer contentType list(type='image/tiff')
-function(f){
-  print(paste0("Downloading ", f))
-  readBin(paste0("./", f),'raw',n = file.info(f)$size)
-}
-
-#* @get /testtiff
-#* @serializer contentType list(type='image/tiff')
-function(){
-  file = './Max_Time_pm_stack_ndvi2.tif'
-  readBin(file,'raw',n = file.info(file)$size)
 }
 
 # pheno-metrics
