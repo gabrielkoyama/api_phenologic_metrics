@@ -1,0 +1,27 @@
+[general]
+creator=R package 'raster'
+created=2022-09-09 23:08:02
+[data]
+datatype=FLT4S
+byteorder=little
+nbands=1
+bandorder=BIL
+categorical=FALSE
+minvalue=-4274.5
+maxvalue=-1897.5
+nodatavalue=-3.4e+38
+[legend]
+legendtype=
+values=
+color=
+[description]
+layername=Asymmetry
+[georeference]
+nrows=19
+ncols=29
+xmin=5854354.73579943
+ymin=10310063.4848163
+xmax=5856210.65880816
+ymax=10311279.5292667
+projection=+proj=aea +lat_0=-12 +lon_0=-54 +lat_1=-2 +lat_2=-22 +x_0=5000000 +y_0=10000000 +ellps=GRS80 +units=m +no_defs
+wkt=PROJCRS["unknown",    BASEGEOGCRS["unknown",        DATUM["Unknown_based_on_GRS80_ellipsoid",            ELLIPSOID["GRS 1980",6378137,298.257222101004,                LENGTHUNIT["metre",1],                ID["EPSG",7019]]],        PRIMEM["Greenwich",0,            ANGLEUNIT["degree",0.0174532925199433,                ID["EPSG",9122]]]],    CONVERSION["Albers Equal Area",        METHOD["Albers Equal Area",            ID["EPSG",9822]],        PARAMETER["Latitude of false origin",-12,            ANGLEUNIT["degree",0.0174532925199433],            ID["EPSG",8821]],        PARAMETER["Longitude of false origin",-54,            ANGLEUNIT["degree",0.0174532925199433],            ID["EPSG",8822]],        PARAMETER["Latitude of 1st standard parallel",-2,            ANGLEUNIT["degree",0.0174532925199433],            ID["EPSG",8823]],        PARAMETER["Latitude of 2nd standard parallel",-22,            ANGLEUNIT["degree",0.0174532925199433],            ID["EPSG",8824]],        PARAMETER["Easting at false origin",5000000,            LENGTHUNIT["metre",1],            ID["EPSG",8826]],        PARAMETER["Northing at false origin",10000000,            LENGTHUNIT["metre",1],            ID["EPSG",8827]]],    CS[Cartesian,2],        AXIS["easting",east,            ORDER[1],            LENGTHUNIT["metre",1,                ID["EPSG",9001]]],        AXIS["northing",north,            ORDER[2],            LENGTHUNIT["metre",1,                ID["EPSG",9001]]]]
